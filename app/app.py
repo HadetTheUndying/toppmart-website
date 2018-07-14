@@ -1,14 +1,17 @@
 from flask import Flask, request, jsonify
-
+from flask_sqlalchemy import SQLAlchemy
 from . import helpers
 
 app = Flask(__name__)
-app.config['SHARED_PRIM_SECRET'] = 0x4832984321;
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db = SQLAlchemy(app)
+
+from . import models
 
 @app.route('/')
 def hello_world():
-    return 'Hello world!'
-
+    return User.query.filter_by(username='admin').first()
+    
 @app.route('/dump')
 def dump():
     if request.method != 'POST':

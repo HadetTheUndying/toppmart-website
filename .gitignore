@@ -3,3 +3,5 @@ static/
 .idea
 app/__pycache__/
 __pycache__/
+*.db
+activate/
