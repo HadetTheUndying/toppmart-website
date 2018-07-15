@@ -1,16 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+
+from . import models
 from . import helpers
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
+models.db.init_app(app)
 
-from . import models
-
-@app.route('/')
-def hello_world():
-    return User.query.filter_by(username='admin').first()
+@app.route('/insert/<name>')
+def insert(name):
+    player = models.Player.query.filter_by(username=name).first()
+    if player is None:
+        player = models.Player(username=name)
+        db.session.add(player)
+        db.session.commit()
+        return 'Could not find %s but inserted it.' % name
+    return 'Found %r' % player
     
 @app.route('/dump')
 def dump():
