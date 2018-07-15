@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 style="height:25px">Sim History</h1>
+    <span style="background-color: #56BF64; margin-top: -30px; padding: 6px; float: right; border-radius: 4px; border: 1px solid #56BF64; font-weight: bold; color: #FFF">@@last_refresh@@s</span>
+    <span class="regular green">cub949 entered the sim. 17:32:00</span></br>
+    <span class="regular red">nep.faulkes left the sim. 17:16:03</span></br>
+    <span class="regular green">nep.faulkes entered the sim. 17:14:03</span></br>
+    <span class="regular green">Stahlsby entered the sim. 16:22:30</span></br>
+    <span class="regular green">alchemy entered the sim. 16:12:00</span></br>
+    <span class="regular green">cwinge entered the sim. 15:12:00</span></br>
+    <h1 style="height:25px">Statistics</h1>
+    <span style="font-size: 12px">This is going to be a list of charts basically with a bunch of data.</span>
+    <div class="canvas-container">
+        <canvas id="myChart" width="500" height="200"></canvas>
+    </div>
+    <script>
+        var randomScalingFactor = function() {
+            return Math.ceil(Math.random() * 10.0) * Math.pow(10, Math.ceil(Math.random() * 5));
+        };
+
+        var config = {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'butt:3',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#0099ff',
+                    fill: false,
+                    data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+                }, {
+                    label: 'dick',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#FF7E1C',
+                    fill: false,
+                    data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'dick butt'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                    }],
+                    yAxes: [{
+                        display: true
+                    }]
+                }
+            }
+        };
+
+        window.onload = function() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            window.myLine = new Chart(ctx, config);
+        };
+    </script>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="logo">
+        <img src="/static/logo.png" width="250"/>
+    </div>
+    <b>About</b>
+    <p class="regular">What is ToppMart? It's a convenience store roleplay sim in the popular online game <a href="">Second Life</a>. Check us out!</p>
+    <b>Players in sim (@@numplayers@@)</b>
+    <div class="timers">
+        <div class="timer-row" ng-repeat="player in players">
+            <div class="timer-label">
+                <p style="display: inline-block">@@player.username@@ <p style="float:right">@@player.elapsed_formatted@@</p></p>
+            </div>
+            <div class="loading-bar" style="width: @@player.width@@px"></div>
+        </div>
+    </div>
+    <div class="button" style="margin-top: 15px">Submit an idea</div>
+    <p class="regular">Want to contribute? See the <a href="https://github.com/qubard/toppmart-website" target="_blank">repository</a>.</p>
+    <p>© 2018 ToppMart, Co.</p>
+{% endblock %}
