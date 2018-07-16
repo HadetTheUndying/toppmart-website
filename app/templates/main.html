@@ -3,12 +3,13 @@
 {% block content %}
     <h1 style="height:25px">Sim History</h1>
     <span style="background-color: #56BF64; margin-top: -30px; padding: 6px; float: right; border-radius: 4px; border: 1px solid #56BF64; font-weight: bold; color: #FFF">@@last_refresh@@s</span>
-    <span class="regular green">cub949 entered the sim. 17:32:00</span></br>
+    <!--<span class="regular green">cub949 entered the sim. 17:32:00</span></br>
     <span class="regular red">nep.faulkes left the sim. 17:16:03</span></br>
     <span class="regular green">nep.faulkes entered the sim. 17:14:03</span></br>
     <span class="regular green">Stahlsby entered the sim. 16:22:30</span></br>
     <span class="regular green">alchemy entered the sim. 16:12:00</span></br>
-    <span class="regular green">cwinge entered the sim. 15:12:00</span></br>
+    <span class="regular green">cwinge entered the sim. 15:12:00</span></br>-->
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/ceUDRy9DFyo?start=0&autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     <h1 style="height:25px">Statistics</h1>
     <span style="font-size: 12px">This is going to be a list of charts basically with a bunch of data.</span>
     <div class="canvas-container">
@@ -81,18 +82,26 @@
     <div class="logo">
         <img src="/static/logo.png" width="250"/>
     </div>
-    <b>About</b>
+    <b class="header">About</b>
     <p class="regular">What is ToppMart? It's a convenience store roleplay sim in the popular online game <a href="">Second Life</a>. Check us out!</p>
-    <b>Players in sim (@@numplayers@@)</b>
+    <b class="header">@@numplayers@@ in sim</b>
     <div class="timers">
         <div class="timer-row" ng-repeat="player in players">
             <div class="timer-label">
-                <p style="display: inline-block">@@player.username@@ <p style="float:right">@@player.elapsed_formatted@@</p></p>
+                <p style="display: inline-block; max-width: 150px; text-overflow: ellipsis; overflow: hidden;">@@player.username@@ <p style="float:right">@@player.elapsed_formatted@@</p></p>
             </div>
             <div class="loading-bar" style="width: @@player.width@@px"></div>
         </div>
     </div>
     <div class="button" style="margin-top: 15px">Submit an idea</div>
     <p class="regular">Want to contribute? See the <a href="https://github.com/qubard/toppmart-website" target="_blank">repository</a>.</p>
+    <div class="powered-by-logos">
+        <a href="http://flask.pocoo.org" target="_blank">
+            <img class="python" src="http://flask.pocoo.org/static/logo/flask.png"/>
+        </a>
+        <a href="https://github.com" target="_blank">
+            <svg class="octicon" height="48" viewBox="0 0 16 16" version="1.1" width="48" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+    </div>
     <p>© 2018 ToppMart, Co.</p>
 {% endblock %}

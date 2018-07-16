@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-from . import models, helpers
+from . import models
 
 from functools import reduce
 from hashlib import md5
+
+from random import getrandbits
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -18,12 +20,10 @@ def index():
     
 def insert_without_commit(name, in_sim):
     player = models.Player.query.filter_by(username=name).first()
-    in_sim = in_sim.lower() in ['true']
     if player is None:
         player = models.Player(username=name,in_sim=in_sim)
         db.session.add(player)
-        db.session.commit()
-        return 'Could not find %s but inserted it.' % name
+        return
     # Player exists and left the sim
     if player.in_sim and not in_sim:
         player.leave_sim()
@@ -36,7 +36,12 @@ def insert_without_commit(name, in_sim):
 # Reset the state of all players currently in the sim and accumulate time (sim crash, script reset)
 @app.route('/sim/reset')
 def reset():
-    return
+    players = models.Player.query.all()
+    for player in players:
+        player.in_sim = False
+    db.session.add_all(players)
+    db.session.commit()
+    return '200'
     
 @app.route('/sim/json/<name>')
 def json(name):
@@ -50,18 +55,29 @@ def json_in_sim():
     players = models.Player.query.filter_by(in_sim=True).all()
     if players:
         return jsonify(\
-            players = [player.serialize for player in players], \
-            max_time = max([player.serialize['elapsed'] for player in players]), \
-            id = md5(reduce((lambda x, y : x+y), [player.username for player in players]).encode()).hexdigest()
+            players=[player.serialize for player in players], \
+            max_time=max([player.serialize['elapsed'] for player in players]), \
+            id=md5(reduce((lambda x, y : x+y), [player.username for player in players]).encode()).hexdigest()
         )                       
-    return 'There are no players in the sim.'
+    return jsonify(players=[], id="%032x" % getrandbits(128))
 
-# data is formatted as <name><in_sim>:<name><in_sim>, ...
-@app.route('/sim/dump/<data>')
-def dump(data):
-    players = helpers.parse_players_dump(data)
-    for player in players:
-        insert_without_commit(player.username, player.in_sim)
+# using our dump endpoint
+# we want to detect if a player has left or entered the sim
+# using the old array and the new array
+# and vice versa
+@app.route('/sim/dump', methods=['POST'])
+def dump():
+    players = set(request.form['players'].split(':'))
+    current_players = set([player.username for player in models.Player.query.filter_by(in_sim=True).all()])
+
+    for player in players - current_players:
+        # player has "joined" the sim
+        insert_without_commit(player, True)
+        
+    for player in current_players - players:
+        # player has "left" the sim
+        insert_without_commit(player, False)
+        
     db.session.commit()
     return json_in_sim()
     

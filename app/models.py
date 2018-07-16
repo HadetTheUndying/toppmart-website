@@ -31,5 +31,4 @@ class Player(db.Model):
         
     @property
     def serialize(self):
-        ret = { 'username': self.username, 'entered_at': time.mktime(self.entered_at.timetuple()), 'elapsed': self.elapsed() }
-        return ret
+        return { 'username': self.username, 'entered_at': time.mktime(self.entered_at.timetuple()), 'elapsed': self.elapsed() }
