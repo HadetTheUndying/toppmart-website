@@ -67,7 +67,7 @@ def json_in_sim():
 # and vice versa
 @app.route('/sim/dump', methods=['POST'])
 def dump():
-    players = set(request.form['players'].split(':'))
+    players = set(filter(lambda x: x != "", request.form['players'].split(':')))
     current_players = set([player.username for player in models.Player.query.filter_by(in_sim=True).all()])
 
     for player in players - current_players:
