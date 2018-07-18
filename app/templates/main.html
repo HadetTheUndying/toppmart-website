@@ -3,17 +3,16 @@
 {% block content %}
     <h1 style="height:25px">Sim History</h1>
     <span style="background-color: #56BF64; margin-top: -30px; padding: 6px; float: right; border-radius: 4px; border: 1px solid #56BF64; font-weight: bold; color: #FFF">@@last_refresh@@s</span>
-    <!--<span class="regular green">cub949 entered the sim. 17:32:00</span></br>
+    <span class="regular green">cub949 entered the sim. 17:32:00</span></br>
     <span class="regular red">nep.faulkes left the sim. 17:16:03</span></br>
     <span class="regular green">nep.faulkes entered the sim. 17:14:03</span></br>
-    <span class="regular green">Stahlsby entered the sim. 16:22:30</span></br>
-    <span class="regular green">alchemy entered the sim. 16:12:00</span></br>
-    <span class="regular green">cwinge entered the sim. 15:12:00</span></br>-->
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/ceUDRy9DFyo?start=0&autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <span class="regular green" style="opacity: 0.2">Stahlsby entered the sim. 16:22:30</span></br>
+    <span class="regular green" style="opacity: 0.4">alchemy entered the sim. 16:12:00</span></br>
+    <span class="regular green" style="opacity: 0.2">cwinge entered the sim. 15:12:00</span></br>
     <h1 style="height:25px">Statistics</h1>
     <span style="font-size: 12px">This is going to be a list of charts basically with a bunch of data.</span>
     <div class="canvas-container">
-        <canvas id="myChart" width="500" height="200"></canvas>
+        <canvas id="myChart" height="100"></canvas>
     </div>
     <script>
         var randomScalingFactor = function() {
@@ -22,6 +21,7 @@
 
         var config = {
             type: 'line',
+            responsive: true,
             data: {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                 datasets: [{
@@ -56,9 +56,10 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
                 title: {
                     display: true,
-                    text: 'dick butt'
+                    text: 'Sim Traffic (24h)'
                 },
                 scales: {
                     xAxes: [{

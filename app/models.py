@@ -32,3 +32,8 @@ class Player(db.Model):
     @property
     def serialize(self):
         return { 'username': self.username, 'entered_at': time.mktime(self.entered_at.timetuple()), 'elapsed': self.elapsed() }
+        
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(80), nullable=False)
+    time = db.Column(db.DateTime(timezone=False), default=datetime.datetime.utcnow)
