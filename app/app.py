@@ -47,7 +47,7 @@ def reset():
 def json(name):
     player = models.Player.query.filter_by(username=name).first()
     if player:
-        return jsonify(player.serialize)
+        return jsonify(player.serialize)        
     return 'Could not find player'
     
 @app.route('/sim/json/in_sim')
@@ -57,7 +57,7 @@ def json_in_sim():
         return jsonify(\
             players=[player.serialize for player in players], \
             max_time=max([player.serialize['elapsed'] for player in players]), \
-            id=md5(reduce((lambda x, y : x+y), [player.username for player in players]).encode()).hexdigest()
+            id=md5(reduce((lambda x, y : x+y), [player.username for player in players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
         )                       
     return jsonify(players=[], id="%032x" % getrandbits(128))
 
