@@ -18,7 +18,7 @@ db.init_app(app)
 def index():
     return render_template('main.html')
     
-def insert_without_commit(name, in_sim):
+def insert_player_no_commit(name, in_sim):
     player = models.Player.query.filter_by(username=name).first()
     if player is None:
         player = models.Player(username=name,in_sim=in_sim)
@@ -72,12 +72,14 @@ def dump():
 
     for player in players - current_players:
         # player has "joined" the sim
-        insert_without_commit(player, True)
+        insert_player_no_commit(player, True)
         
     for player in current_players - players:
         # player has "left" the sim
-        insert_without_commit(player, False)
-        
+        insert_player_no_commit(player, False)
+    
+    # register the number of players in the sim at the current time
+    
     db.session.commit()
     return json_in_sim()
     
