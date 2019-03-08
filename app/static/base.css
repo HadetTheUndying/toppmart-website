@@ -9,6 +9,7 @@ body {
     padding: 0;
     overflow: hidden;
     color: #404040;
+    background-color: #FFF;
     font-size: 14px;
     border-top: 4px solid #0099ff;
     animation: highlight 1s linear;
