@@ -7,14 +7,20 @@ from hashlib import md5
 
 from random import getrandbits
 
+from flask_sslify import SSLify
+
 app = Flask(__name__)
+sslify = SSLify(app) # redirect all http:// to https://
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+
 db = models.db
+db.create_all()
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
 
 @app.route('/')
 def index():

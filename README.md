@@ -9,16 +9,21 @@ A `Flask`, `SQLAlchemy` and `AngularJS` app to collect stats about ToppMart (nam
 ```
 pip install flask
 pip install Flask-SQLAlchemy
+pip install flask_sslify
+pip install gunicorn
 ```
 
 Make sure you generate your `sqlite3` database file using `db.create_all` in the app context.
 
 # Production mode
 
+Deployment is done using `gunicorn` with `SSL` support
+
 ```
 export FLASK_APP=app/app.py
 export FLASK_ENV=production
-flask run --host=0.0.0.0 --port=80
+cd app
+gunicorn -b 0.0.0.0:443 app:app --certfile=cert.pem --keyfile=privkey.pem
 ```
 
 Then navigate to `<ipaddress>:80` in your browser.
