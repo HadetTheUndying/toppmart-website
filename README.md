@@ -23,7 +23,7 @@ Deployment is done using `gunicorn` with `SSL` support
 export FLASK_APP=app/app.py
 export FLASK_ENV=production
 cd app
-gunicorn -b 0.0.0.0:443 app:app --certfile=cert.pem --keyfile=privkey.pem
+gunicorn -w 4 -b 0.0.0.0:443 app:app --certfile=cert.pem --keyfile=privkey.pem --daemon
 ```
 
 Then navigate to `<ipaddress>:80` in your browser.
