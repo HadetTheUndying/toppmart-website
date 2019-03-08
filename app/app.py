@@ -9,10 +9,11 @@ from hashlib import md5
 from random import getrandbits
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = models.db
 db.init_app(app)
+
 
 @app.route('/')
 def index():

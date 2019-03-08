@@ -4,6 +4,7 @@ import datetime, time
 
 db = SQLAlchemy()
 
+
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -32,7 +33,8 @@ class Player(db.Model):
     @property
     def serialize(self):
         return { 'username': self.username, 'entered_at': time.mktime(self.entered_at.timetuple()), 'elapsed': self.elapsed() }
-        
+
+
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(80), nullable=False)

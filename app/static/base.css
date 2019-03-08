@@ -20,7 +20,7 @@ body {
 }
 
 .container {
-    width: 950px;
+    width: 740px;
     margin: 1% auto;
 }
 
@@ -29,10 +29,10 @@ body {
 }
 
 .logo {
-    width: 250px;
-    margin-bottom: 18px;
-    height: 162px;
-    margin-left: -10px;
+    width: 400px;
+    height: 259px;
+    margin: 0px auto;
+    margin-bottom: 2%;
     background: linear-gradient(90deg, #0099ff, #30edff);
     background-size: 400% 400%;
     -webkit-animation: logo 2s ease infinite;
@@ -62,8 +62,13 @@ body {
 }
 
 .header {
-    font-size: 18px;
+    font-size: 16px;
     white-space: nowrap
+}
+
+.footer {
+    text-align: center;
+    margin-top: 1%;
 }
 
 a {
@@ -90,10 +95,15 @@ a:hover {
     -o-animation: highlight 1s linear;
     animation-iteration-count:infinite;
     height: 10px;
+    margin-top: 6px;
 }
 
 .timers {
-    margin-top: 2px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 220px 220px 220px;
+    grid-gap: 10px 30px;
 }
 
 .blue {
@@ -101,23 +111,39 @@ a:hover {
 }
 
 .timer-row {
-    display: inline-block;
     width: 220px;
-    border-radius: 3px;
-    padding-top: 0;
-    margin-bottom: 7px;
     font-size: 12px;
     white-space: nowrap;
+    padding: 8px;
+    border: 1px solid #EDEDED;
+    background-color: #FFF;
+    box-shadow: 1px 1px 11px -2px rgba(0,0,0,0.12);
+    transition: 0.5s all;
+}
+
+.timer-row:hover {
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.timer-row .username {
+    max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 2px;
+}
+
+.timer-row .time {
+    display: flex;
+    background-color: #EDEDED;
+    padding: 2px;
+    font-weight: bold;
 }
 
 .timer-label {
-    height: 40px;
-}
-
-.main-content {
-    margin-top: -10px;
-    width: 675px;
-    float: right;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
 }
 
 .button {
@@ -126,6 +152,7 @@ a:hover {
     padding: 6px;
     text-align: center;
     color: #0099ff;
+    transition: 0.5s all;
     cursor: pointer;
     font-weight: bold;
 }
@@ -168,7 +195,7 @@ a:hover {
 
 .powered-by-logos a:hover {
     text-decoration: none;
-    color: 
+    transition: 0.5s all;
 }
             
 @keyframes highlight-border {
