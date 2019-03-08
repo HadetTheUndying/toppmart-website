@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 
-from . import models
+from models import models
 
 from functools import reduce
 from hashlib import md5
