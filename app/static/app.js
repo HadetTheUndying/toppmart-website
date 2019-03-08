@@ -40,7 +40,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
                   }
                   $scope.numplayers = res.data.players.length + ' player' + (res.data.players.length > 1 ? 's' : '');
                   $scope.players = res.data.players.sort((b,a) => b.elapsed - a.elapsed);
-                  $scope.offline_players = res.data.offline_players;
+                  $scope.offline_players = res.data.offline_players.sort((b,a) => b.elapsed - a.elapsed);
                   $scope.numofflineplayers = res.data.offline_players.length + ' player' + (res.data.offline_players.length > 1 ? 's' : '');
                   $scope.max_time = res.data.max_time;
                   sidebar_id = res.data.id;
