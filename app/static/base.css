@@ -10,7 +10,7 @@ body {
     overflow: hidden;
     color: #404040;
     font-size: 14px;
-    border-top: 6px solid #0099ff;
+    border-top: 4px solid #0099ff;
     animation: highlight 1s linear;
     -moz-animation: highlight-border 2s linear;
     -webkit-animation: highlight-border 2s linear;
