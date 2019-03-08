@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, render_template
-from flask_sqlalchemy import SQLAlchemy
 
 from . import models
 
@@ -14,16 +13,29 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = models.db
 db.init_app(app)
 
+with app.app_context():
+    db.create_all()
+
 @app.route('/')
 def index():
     return render_template('main.html')
-    
-def insert_player_no_commit(name, in_sim):
+
+
+def update_player(name, pos):
     player = models.Player.query.filter_by(username=name).first()
+    if player is not None:
+        player.set_pos(pos)
+
+
+def insert_player_no_commit(name, pos, in_sim):
+    player = models.Player.query.filter_by(username=name).first()
+    x, z = pos
     if player is None:
-        player = models.Player(username=name,in_sim=in_sim)
+        player = models.Player(username=name,in_sim=in_sim, x=x, z=z)
         db.session.add(player)
         return
+
+    player.set_pos(pos)
     # Player exists and left the sim
     if player.in_sim and not in_sim:
         player.leave_sim()
@@ -70,17 +82,32 @@ def json_in_sim():
 # and vice versa
 @app.route('/sim/dump', methods=['POST'])
 def dump():
-    players = set(filter(lambda x: x != "", request.form['players'].split(':')))
+    players = []
+    for player_string in request.form['players'].split(':'):
+        players.append(player_string.split(","))
+    player_names = set(filter(lambda x: x != "", [player[0] for player in players]))
     current_players = set([player.username for player in models.Player.query.filter_by(in_sim=True).all()])
 
-    for player in players - current_players:
+    positions = {}
+
+    for player in players:
+        positions[player[0]] = (player[1], player[2])
+
+    joined = player_names - current_players
+
+    # Player already in sim, needs their position updated
+    for player in players:
+        if player[0] not in joined:
+            update_player(player[0], positions[player[0]])
+
+    for player in joined:
         # player has "joined" the sim
-        insert_player_no_commit(player, True)
-        
-    for player in current_players - players:
+        insert_player_no_commit(player, positions[player], True)
+
+    for player in current_players - player_names:
         # player has "left" the sim
-        insert_player_no_commit(player, False)
-    
+        insert_player_no_commit(player, (-1, -1), False)
+
     # register the number of players in the sim at the current time
     
     db.session.commit()
