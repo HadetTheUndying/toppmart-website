@@ -14,7 +14,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
 db = models.db
-db.create_all()
 db.init_app(app)
 
 
@@ -73,7 +72,7 @@ def json_in_sim():
             players= [player.serialize for player in online_players], \
             offline_players=[player.serialize for player in players if not player.in_sim], \
             max_time=max([player.serialize['elapsed'] for player in players]), \
-            id=md5(reduce((lambda x, y : x+y), [player.username for player in online_players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
+            id=md5(reduce((lambda x, y : x+y), [str(player) for player in online_players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
         )
     return jsonify(players=[], id="%032x" % getrandbits(128))
 

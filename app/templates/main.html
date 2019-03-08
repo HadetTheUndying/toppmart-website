@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="logo">
-        <img src="/static/logo.png" width="400"/>
+    <div style="display: flex; justify-content: space-around; margin-bottom: 3%">
+        <div class="logo">
+            <img src="/static/logo.png" width="400"/>
+        </div>
+        <div class="minimap">
+            <div class="player" ng-repeat="player in players">
+                <img src="/static/player.png" title="@@player.username@@" alt="@@player.username@@" style="position: absolute; margin-left:@@player.x@@px; margin-top: @@256 - player.z@@px">
+            </div>
+        </div>
     </div>
     <b class="header" ng-if="players && players.length > 0">@@numplayers@@ in sim</b>
     <div class="timers" ng-if="players && players.length > 0">

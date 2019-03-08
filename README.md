@@ -1,6 +1,6 @@
 # Toppmart Website
 
-A `Flask`, `SQLAlchemy` and `AngularJS` app to collect stats about ToppMart (namely, which players are in the sim).
+A `Flask`, `SQLAlchemy` and `AngularJS` app to collect stats about ToppMart (live updates).
 
 ![](readme/screenshot.png)
 

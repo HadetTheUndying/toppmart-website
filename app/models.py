@@ -17,7 +17,10 @@ class Player(db.Model):
     
     def __repr__(self):
         return 'Player(%s,%s,%r,%r,%s)' % (self.id, self.username, self.entered_at, self.left_at, self.accumulated_time)
-        
+
+    def __str__(self):
+        return '%s,%s,%s' % (self.username, self.x, self.z)
+
     def enter_sim(self):
         self.in_sim = True
         self.entered_at = datetime.datetime.utcnow()
@@ -43,8 +46,3 @@ class Player(db.Model):
     def serialize(self):
         return { 'username': self.username, 'elapsed': self.elapsed(), 'x': self.x, 'z': self.z }
 
-
-class Event(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(80), nullable=False)
-    time = db.Column(db.DateTime(timezone=False), default=datetime.datetime.utcnow)

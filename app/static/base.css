@@ -32,8 +32,6 @@ body {
 .logo {
     width: 400px;
     height: 259px;
-    margin: 0px auto;
-    margin-bottom: 2%;
     background: linear-gradient(90deg, #0099ff, #30edff);
     background-size: 400% 400%;
     -webkit-animation: logo 2s ease infinite;
@@ -107,6 +105,16 @@ a:hover {
     grid-gap: 10px 30px;
 }
 
+.minimap {
+    width: 256px;
+    height: 256px;
+    border-radius: 35px;
+    margin-top: 10px;
+    box-shadow: 1px 1px 11px -2px rgba(0,0,0,0.39);
+    background-repeat: no-repeat;
+    background-image: url('https://secondlife-maps-cdn.akamaized.net/map-1-1105-1015-objects.jpg');
+}
+
 .blue {
     color: #0099ff;
 }
@@ -168,6 +176,7 @@ a:hover {
 }
 
 .regular {
+    text-align: center;
     font-size: 12px;
 }
 
