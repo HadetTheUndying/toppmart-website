@@ -4,9 +4,9 @@
     <div class="logo">
         <img src="/static/logo.png" width="400"/>
     </div>
-    <b class="header" ng-if="numplayers" >@@numplayers@@ in sim</b>
-    <div class="timers">
-        <div class="timer-row" ng-if="players" ng-repeat="player in players">
+    <b class="header" ng-if="players && players.length > 0">@@numplayers@@ in sim</b>
+    <div class="timers" ng-if="players && players.length > 0">
+        <div class="timer-row" ng-repeat="player in players">
             <div class="timer-label">
                 <div class="username">@@player.username@@</div>
                 <div class="time">@@player.elapsed_formatted@@</div>
@@ -14,8 +14,8 @@
             <div class="loading-bar" style="width: @@player.width@@px"></div>
         </div>
     </div>
-    <b class="header" ng-if="offline_players" >@@numofflineplayers@@ away</b>
-    <div class="timers">
+    <b class="header" ng-if="offline_players && offline_players.length > 0">@@numofflineplayers@@ away</b>
+    <div class="timers" ng-if="offline_players && offline_players.length > 0">
         <div class="timer-row" ng-if="players" ng-repeat="player in offline_players">
             <div class="timer-label">
                 <div class="username">@@player.username@@</div>
