@@ -9,7 +9,6 @@ A `Flask`, `SQLAlchemy` and `AngularJS` app to collect stats about ToppMart (nam
 ```
 pip install flask
 pip install Flask-SQLAlchemy
-pip install flask_sslify
 pip install gunicorn
 ```
 
@@ -26,7 +25,10 @@ cd app
 gunicorn -w 4 -b 0.0.0.0:443 app:app --certfile=cert.pem --keyfile=privkey.pem --daemon
 ```
 
-Then navigate to `<ipaddress>:80` in your browser.
+Then navigate to `localhost` in your browser.
+
+To enable `port 80`, do it manually by running `gunicorn -b 0.0.0.0:80 app:app --daemon` (`llHttpRequest` needs this because `https://` redirects invalidate all `POST` requests).
+
 
 # How it works
 
