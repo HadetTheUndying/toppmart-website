@@ -14,7 +14,6 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 db = models.db
 db.init_app(app)
 
-
 @app.route('/')
 def index():
     return render_template('main.html')
@@ -51,16 +50,18 @@ def json(name):
         return jsonify(player.serialize)        
     return 'Could not find player'
     
-@app.route('/sim/json/in_sim')
+@app.route('/sim/json/players')
 def json_in_sim():
-    players = models.Player.query.filter_by(in_sim=True).all()
+    players = models.Player.query.all()
     if players:
         return jsonify(\
-            players=[player.serialize for player in players], \
+            players=[player.serialize for player in players if player.in_sim], \
+            offline_players=[player.serialize for player in players if not player.in_sim], \
             max_time=max([player.serialize['elapsed'] for player in players]), \
             id=md5(reduce((lambda x, y : x+y), [player.username for player in players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
         )                       
     return jsonify(players=[], id="%032x" % getrandbits(128))
+
 
 # using our dump endpoint
 # we want to detect if a player has left or entered the sim

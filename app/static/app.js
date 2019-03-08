@@ -24,7 +24,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
     }
     
     var getPlayers = function() {
-        $http.get('/sim/json/in_sim')
+        $http.get('/sim/json/players')
         .then(function(res) {
           if(sidebar_id == null || sidebar_id != res.data.id) {
               if(res.data.players.length == 0) {
@@ -35,8 +35,13 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
                       res.data.players[i].width = Math.min(10 + (210 * res.data.players[i].elapsed/res.data.max_time), 220);
                       res.data.players[i].elapsed_formatted = format_time(res.data.players[i].elapsed);
                   }
+                  for(var i = 0; i < res.data.offline_players.length; i++) {
+                      res.data.offline_players[i].elapsed_formatted = format_time(res.data.offline_players[i].elapsed);
+                  }
                   $scope.numplayers = res.data.players.length + ' player' + (res.data.players.length > 1 ? 's' : '');
-                  $scope.players = res.data.players;
+                  $scope.players = res.data.players.sort((b,a) => b.elapsed - a.elapsed);
+                  $scope.offline_players = res.data.offline_players;
+                  $scope.numofflineplayers = res.data.offline_players.length + ' player' + (res.data.offline_players.length > 1 ? 's' : '');
                   $scope.max_time = res.data.max_time;
                   sidebar_id = res.data.id;
               }
@@ -59,6 +64,13 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
             players[i].width = Math.min(10 + (210 * players[i].elapsed/$scope.max_time), 220);
             players[i].elapsed_formatted = format_time(players[i].elapsed);
         }
+
+        offline_players = $scope.offline_players;
+        console.log(offline_players)
+        for(var i = 0; i < offline_players.length; i++) {
+            offline_players[i].elapsed += elapsed;
+            offline_players[i].elapsed_formatted = format_time(offline_players[i].elapsed);
+        }
         last_date = Date.now();
         $scope.last_refresh = Date.now();
         $timeout(updateUI, 1000);
@@ -77,6 +89,8 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
     getPlayers();
     $scope.numplayers = '0 players';
     $scope.players = [];
+    $scope.numofflineplayers = '0 away';
+    $scope.offline_players = [];
     updateUI();
     
     $scope.$on('$destroy', function() {

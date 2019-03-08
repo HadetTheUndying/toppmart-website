@@ -4,14 +4,23 @@
     <div class="logo">
         <img src="/static/logo.png" width="400"/>
     </div>
-    <b class="header">@@numplayers@@ in sim</b>
+    <b class="header" ng-if="numplayers" >@@numplayers@@ in sim</b>
     <div class="timers">
-        <div class="timer-row" ng-repeat="player in players">
+        <div class="timer-row" ng-if="players" ng-repeat="player in players">
             <div class="timer-label">
                 <div class="username">@@player.username@@</div>
                 <div class="time">@@player.elapsed_formatted@@</div>
             </div>
             <div class="loading-bar" style="width: @@player.width@@px"></div>
+        </div>
+    </div>
+    <b class="header" ng-if="offline_players" >@@numofflineplayers@@ away</b>
+    <div class="timers">
+        <div class="timer-row" ng-if="players" ng-repeat="player in offline_players">
+            <div class="timer-label">
+                <div class="username">@@player.username@@</div>
+                <div class="time">@@player.elapsed_formatted@@</div>
+            </div>
         </div>
     </div>
     <div class="button" style="margin-top: 15px" onclick="window.open('https://discord.gg/NCrneV')">Click here to join the discord</div>

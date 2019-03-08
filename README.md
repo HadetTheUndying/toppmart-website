@@ -16,11 +16,12 @@ Make sure you generate your `sqlite3` database file using `db.create_all` in the
 # Production mode
 
 ```
-cd app
-flask run --host=0.0.0.0 --port=5000
+export FLASK_APP=app/app.py
+export FLASK_ENV=production
+flask run --host=0.0.0.0 --port=80
 ```
 
-Then navigate to `<ipaddress>:5000` in your browser.
+Then navigate to `<ipaddress>:80` in your browser.
 
 # How it works
 
