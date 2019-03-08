@@ -2,6 +2,7 @@
 
 A `Flask`, `SQLAlchemy` and `AngularJS` app to collect stats about ToppMart (namely, which players are in the sim).
 
+![](readme/screenshot.png)
 
 # Setup
 
