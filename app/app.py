@@ -54,12 +54,13 @@ def json(name):
 def json_in_sim():
     players = models.Player.query.all()
     if players:
+        online_players = [player for player in players if player.in_sim]
         return jsonify(\
-            players=[player.serialize for player in players if player.in_sim], \
+            players= [player.serialize for player in online_players], \
             offline_players=[player.serialize for player in players if not player.in_sim], \
             max_time=max([player.serialize['elapsed'] for player in players]), \
-            id=md5(reduce((lambda x, y : x+y), [player.username for player in players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
-        )                       
+            id=md5(reduce((lambda x, y : x+y), [player.username for player in online_players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
+        )
     return jsonify(players=[], id="%032x" % getrandbits(128))
 
 

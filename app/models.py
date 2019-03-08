@@ -25,14 +25,17 @@ class Player(db.Model):
         self.left_at = datetime.datetime.utcnow()
     
     def elapsed(self):
-        return (datetime.datetime.utcnow() - self.entered_at).seconds
+        ref = self.left_at
+        if self.in_sim:
+            ref = self.entered_at
+        return (datetime.datetime.utcnow() - ref).seconds
     
     def accumulate_time(self):
         self.accumulated_time += (self.left_at - self.entered_at).seconds
         
     @property
     def serialize(self):
-        return { 'username': self.username, 'entered_at': time.mktime(self.entered_at.timetuple()), 'elapsed': self.elapsed() }
+        return { 'username': self.username, 'elapsed': self.elapsed() }
 
 
 class Event(db.Model):

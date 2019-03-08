@@ -66,7 +66,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
         }
 
         offline_players = $scope.offline_players;
-        console.log(offline_players)
+
         for(var i = 0; i < offline_players.length; i++) {
             offline_players[i].elapsed += elapsed;
             offline_players[i].elapsed_formatted = format_time(offline_players[i].elapsed);
