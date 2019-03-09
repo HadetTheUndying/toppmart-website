@@ -115,6 +115,12 @@ a:hover {
     background-image: url('https://secondlife-maps-cdn.akamaized.net/map-1-1105-1015-objects.jpg');
 }
 
+.logo-header {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 3%;
+}
+
 .blue {
     color: #0099ff;
 }
@@ -133,6 +139,7 @@ a:hover {
 .timer-row:hover {
     cursor: pointer;
     transform: scale(1.15);
+    z-index: 1;
 }
 
 .rank .trophy {

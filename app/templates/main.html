@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div style="display: flex; justify-content: space-around; margin-bottom: 3%">
+    <div class="logo-header">
         <div class="logo">
             <img src="/static/logo.png" width="400"/>
         </div>
         <div class="minimap">
             <div class="player" ng-repeat="player in players">
-                <img src="/static/player.png" alt="@@player.username@@" style="position: absolute; margin-left:@@player.x - 3.5@@px; margin-top: @@256 - player.z - 3.5@@px">
+                <img src="/static/player.png" title="@@player.username@@" alt="@@player.username@@" style="position: absolute; margin-left:@@player.x - 3.5@@px; margin-top: @@256 - player.z - 3.5@@px">
             </div>
         </div>
     </div>
     <b class="header" ng-if="players && players.length > 0">@@numplayers@@ in sim</b>
     <div class="timers" ng-if="players && players.length > 0">
-        <div class="timer-row" ng-repeat="player in players">
+        <div class="timer-row" ng-repeat="player in players" data-balloon="@@(player.time + player.elapsed) | dateFilter@@ total" data-balloon-pos="up">
             <div class="timer-label">
                 <div class="rank">
                     <div class="trophy" ng-if="player.rank == 1">🥇</div>
@@ -29,7 +29,7 @@
     </div>
     <b class="header" ng-if="offline_players && offline_players.length > 0">@@numofflineplayers@@ away</b>
     <div class="timers" ng-if="offline_players && offline_players.length > 0">
-        <div class="timer-row" ng-if="players" ng-repeat="player in offline_players">
+        <div class="timer-row" ng-if="players" ng-repeat="player in offline_players" data-balloon="@@player.time | dateFilter@@ total" data-balloon-pos="up">
             <div class="timer-label">
                 <div class="rank">
                     <div class="trophy" ng-if="player.rank == 1">🥇</div>
