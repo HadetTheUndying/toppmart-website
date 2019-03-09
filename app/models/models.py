@@ -41,4 +41,4 @@ class Player(db.Model):
 
     @property
     def serialize(self):
-        return {'username': self.username, 'time': self.accumulated_time, 'elapsed': self.elapsed(), 'x': self.x, 'z': self.z}
+        return {'username': self.username, 'time': self.accumulated_time, 'elapsed': self.elapsed(), 'x': self.x, 'z': self.z, 'in_sim': self.in_sim}
