@@ -32,7 +32,9 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
                    $scope.players = [];
               } else {
                   // Compute the ranks
-                  var rank_list = res.data.players.concat(res.data.offline_players).sort((a, b) => (b.time + b.elapsed) - (a.time + a.elapsed));
+                  var rank_list = res.data.players.concat(res.data.offline_players).sort((a, b) =>
+                    (b.time  + (b.in_sim ? b.elapsed : 0)) - (a.time +  + (a.in_sim ? a.elapsed : 0))
+                  );
                   var rank_dict = {};
                   for (var i = 0; i < rank_list.length; i++) {
                     rank_dict[rank_list[i].username] = i + 1;
@@ -88,6 +90,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
             offline_players[i].elapsed += elapsed;
             offline_players[i].elapsed_formatted = format_time(offline_players[i].elapsed);
         }
+
         last_date = Date.now();
         $scope.last_refresh = Date.now();
         $timeout(updateUI, 1000);
