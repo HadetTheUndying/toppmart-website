@@ -26,17 +26,34 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
     var getPlayers = function() {
         $http.get('/sim/json/players')
         .then(function(res) {
-          if(sidebar_id == null || sidebar_id != res.data.id) {
-              if(res.data.players.length == 0) {
+          if (sidebar_id == null || sidebar_id != res.data.id) {
+              if (res.data.players.length == 0) {
                    $scope.numplayers = '0 players';
                    $scope.players = [];
               } else {
-                  for(var i = 0; i < res.data.players.length; i++) {
+                  // Compute the ranks
+                  var rank_list = res.data.players.concat(res.data.offline_players).sort((a, b) => (b.time + b.elapsed) - (a.time + a.elapsed));
+                  var rank_dict = {};
+                  for (var i = 0; i < rank_list.length; i++) {
+                    rank_dict[rank_list[i].username] = i + 1;
+                  }
+
+                  for (var i = 0; i < res.data.players.length; i++) {
                       res.data.players[i].width = Math.min(10 + (210 * res.data.players[i].elapsed/res.data.max_time), 220);
                       res.data.players[i].elapsed_formatted = format_time(res.data.players[i].elapsed);
+                      var split_name = res.data.players[i].username.split(" ");
+                      res.data.players[i].rank = rank_dict[res.data.players[i].username];
+                      if (split_name.length > 0 && split_name[1] == "Resident") {
+                          res.data.players[i].username = split_name[0];
+                      }
                   }
-                  for(var i = 0; i < res.data.offline_players.length; i++) {
+                  for (var i = 0; i < res.data.offline_players.length; i++) {
                       res.data.offline_players[i].elapsed_formatted = format_time(res.data.offline_players[i].elapsed);
+                      var split_name = res.data.offline_players[i].username.split(" ");
+                      res.data.offline_players[i].rank = rank_dict[res.data.offline_players[i].username];
+                      if (split_name.length > 0 && split_name[1] == "Resident") {
+                          res.data.offline_players[i].username = split_name[0];
+                      }
                   }
                   $scope.numplayers = res.data.players.length + ' player' + (res.data.players.length > 1 ? 's' : '');
                   $scope.players = res.data.players.sort((b,a) => b.elapsed - a.elapsed);
@@ -59,7 +76,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
         elapsed = (Date.now() - last_date)/1000;
         $scope.max_time += elapsed;
         $scope.max_time = Math.floor($scope.max_time);
-        for(var i = 0; i < players.length; i++) {
+        for (var i = 0; i < players.length; i++) {
             players[i].elapsed += elapsed;
             players[i].width = Math.min(10 + (210 * players[i].elapsed/$scope.max_time), 220);
             players[i].elapsed_formatted = format_time(players[i].elapsed);
@@ -67,7 +84,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
 
         offline_players = $scope.offline_players;
 
-        for(var i = 0; i < offline_players.length; i++) {
+        for (var i = 0; i < offline_players.length; i++) {
             offline_players[i].elapsed += elapsed;
             offline_players[i].elapsed_formatted = format_time(offline_players[i].elapsed);
         }

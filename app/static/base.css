@@ -135,16 +135,28 @@ a:hover {
     transform: scale(1.15);
 }
 
+.rank .trophy {
+    margin-right: 2px;
+}
+
 .timer-row .username {
-    max-width: 150px;
+    margin-right: 4px;
     text-overflow: ellipsis;
     overflow: hidden;
     padding: 2px;
+    flex-grow: 1;
 }
 
 .timer-row .time {
     display: flex;
     background-color: #EDEDED;
+    padding: 2px;
+    font-weight: bold;
+}
+
+.timer-row .rank {
+    display: flex;
+    background-color: #fff;
     padding: 2px;
     font-weight: bold;
 }

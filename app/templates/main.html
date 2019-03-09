@@ -7,7 +7,7 @@
         </div>
         <div class="minimap">
             <div class="player" ng-repeat="player in players">
-                <img src="/static/player.png" title="@@player.username@@" alt="@@player.username@@" style="position: absolute; margin-left:@@player.x@@px; margin-top: @@256 - player.z@@px">
+                <img src="/static/player.png" alt="@@player.username@@" style="position: absolute; margin-left:@@player.x - 3.5@@px; margin-top: @@256 - player.z - 3.5@@px">
             </div>
         </div>
     </div>
@@ -15,6 +15,7 @@
     <div class="timers" ng-if="players && players.length > 0">
         <div class="timer-row" ng-repeat="player in players">
             <div class="timer-label">
+                <div class="rank"><div class="trophy" ng-if="player.rank <= 3">🏆</div>#@@player.rank@@ </div>
                 <div class="username">@@player.username@@</div>
                 <div class="time">@@player.elapsed_formatted@@</div>
             </div>
@@ -25,13 +26,14 @@
     <div class="timers" ng-if="offline_players && offline_players.length > 0">
         <div class="timer-row" ng-if="players" ng-repeat="player in offline_players">
             <div class="timer-label">
+                <div class="rank"><div class="trophy" ng-if="player.rank <= 3">🏆</div>#@@player.rank@@ </div>
                 <div class="username">@@player.username@@</div>
                 <div class="time">@@player.elapsed_formatted@@</div>
             </div>
         </div>
     </div>
     <div class="button" style="margin-top: 15px" onclick="window.open('https://discord.gg/NCrneV')">Click here to join the discord</div>
-    <p class="regular">Want to contribute? See the <a href="https://github.com/qubard/toppmart-website" target="_blank">repository</a>.</p>
+    <p class="regular">Want to contribute? See the <a href="https://github.com/qubard/toppmart-website" target="_blank">repository</a>. Ranks go by accumulated time in Onatopp.</p>
     <div class="powered-by-logos">
         <a href="http://flask.pocoo.org" target="_blank">
             <img class="python" src="http://flask.pocoo.org/static/logo/flask.png"/>
