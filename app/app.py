@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
+app.config['SECRET_KEY'] = 'CHANGE ME'
 
 db = models.db
 db.init_app(app)
@@ -47,11 +48,15 @@ def insert_player_no_commit(name, pos, in_sim):
     db.session.add(player)
     
 # Reset the state of all players currently in the sim and accumulate time (sim crash, script reset)
-@app.route('/sim/reset')
-def reset():
+@app.route('/sim/reset/<token>')
+def reset(token):
+    if token != app.config['SECRET_KEY']:
+        return 'Bad secret'
+
     players = models.Player.query.all()
     for player in players:
         player.in_sim = False
+    player.accumulate_time()
     db.session.add_all(players)
     db.session.commit()
     return '200'
@@ -76,13 +81,15 @@ def json_in_sim():
         )
     return jsonify(players=[], id="%032x" % getrandbits(128))
 
-
 # using our dump endpoint
 # we want to detect if a player has left or entered the sim
 # using the old array and the new array
 # and vice versa
-@app.route('/sim/dump', methods=['POST'])
-def dump():
+@app.route('/sim/dump/<token>', methods=['POST'])
+def dump(token):
+    if token != app.config['SECRET_KEY']:
+        return 'Bad secret'
+
     players = []
     for player_string in request.form['players'].split(':'):
         players.append(player_string.split(","))

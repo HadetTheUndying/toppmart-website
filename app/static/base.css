@@ -151,7 +151,7 @@ a:hover {
 }
 
 .rank .trophy {
-    margin-right: 2px;
+    margin-right: 4px;
 }
 
 .timer-row .username {
@@ -163,6 +163,7 @@ a:hover {
 }
 
 .timer-row .time {
+    border-radius: 4px;
     display: flex;
     background-color: #EDEDED;
     padding: 2px;
@@ -217,8 +218,8 @@ a:hover {
 }
 
 .powered-by-logos {
+    margin-top: 30px;
     text-align: center;
-    color: red;
 }
 
 .python {
@@ -234,6 +235,13 @@ a:hover {
 .powered-by-logos a:hover {
     text-decoration: none;
     transition: 0.5s all;
+}
+
+.trophy-img {
+    margin-top: 0px;
+    margin-right: 1px;
+    width: 15px;
+    height: 15px;
 }
             
 @keyframes highlight-border {

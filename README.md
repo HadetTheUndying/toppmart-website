@@ -2,7 +2,7 @@
 
 A `Flask`, `SQLAlchemy` and `AngularJS` app to collect stats about ToppMart with live updates. See it [live](https://toppmart.org).
 
-![](readme/screenshot2.png)
+![](readme/screenshot3.png)
 
 # Setup
 
@@ -22,7 +22,7 @@ Deployment is done using `gunicorn` with `SSL` support
 export FLASK_APP=app/app.py
 export FLASK_ENV=production
 cd app
-gunicorn -w 4 -b 0.0.0.0:443 app:app --certfile=cert.pem --keyfile=privkey.pem --daemon
+gunicorn -w 4 -b 0.0.0.0:443 app:app --certfile=fullchain.pem --keyfile=privkey.pem --daemon
 ```
 
 Then navigate to `localhost` in your browser.
@@ -32,4 +32,4 @@ To enable `port 80`, do it manually by running `gunicorn -b 0.0.0.0:80 app:app -
 
 # How it works
 
-Data is sent to the server through a POST request from Second Life to the `/sim/dump` endpoint. Data is formatted as a colon separated list of player names (ex. `user1:user2:user3`).
+Data is sent to the server through a POST request from Second Life to the `/sim/dump` endpoint. Data is formatted as a colon separated list of player names with their positions (ex. `user1,x,y:user2,x,y:user3,x,y`).

@@ -16,9 +16,9 @@
         <div class="timer-row" ng-repeat="player in players" data-balloon="@@(player.time + player.elapsed) | dateFilter@@ total" data-balloon-pos="up">
             <div class="timer-label">
                 <div class="rank">
-                    <div class="trophy" ng-if="player.rank == 1">🥇</div>
-                    <div class="trophy" ng-if="player.rank == 2">🥈</div>
-                    <div class="trophy" ng-if="player.rank == 3">🥉</div>
+			<div class="trophy trophy-img t1" ng-if="player.rank == 1"><img src="/static/t1.png" class="trophy-img"/></div>
+			<div class="trophy trophy-img t2" ng-if="player.rank == 2"><img src="/static/t2.png" class="trophy-img"/></div>
+			<div class="trophy trophy-img t3" ng-if="player.rank == 3"><img src="/static/t3.png" class="trophy-img"/></div>
                     #@@player.rank@@
                 </div>
                 <div class="username">@@player.username@@</div>
@@ -35,9 +35,9 @@
         <div class="timer-row" ng-if="players" ng-repeat="player in offline_players" data-balloon="@@player.time | dateFilter@@ total" data-balloon-pos="up">
             <div class="timer-label">
                 <div class="rank">
-                    <div class="trophy" ng-if="player.rank == 1">🥇</div>
-                    <div class="trophy" ng-if="player.rank == 2">🥈</div>
-                    <div class="trophy" ng-if="player.rank == 3">🥉</div>
+			<div class="trophy" ng-if="player.rank == 1"><img src="/static/t1.png" class="trophy-img"/></div>
+			<div class="trophy trophy-img t2" ng-if="player.rank == 2"><img src="/static/t2.png" class="trophy-img"/></div>
+			<div class="trophy trophy-img t3" ng-if="player.rank == 3"><img src="/static/t3.png" class="trophy-img"/></div>
                     #@@player.rank@@
                 </div>
                 <div class="username">@@player.username@@</div>
