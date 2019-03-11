@@ -7,7 +7,7 @@
         </div>
         <div class="minimap">
             <div class="player" ng-repeat="player in players">
-                <img src="/static/player.png" title="@@player.username@@" alt="@@player.username@@" style="position: absolute; margin-left:@@player.x - 3.5@@px; margin-top: @@256 - player.z - 3.5@@px">
+                <img src="/static/player.png" alt="@@player.username@@" title="@@player.username@@" style="position: absolute; margin-left:@@player.x - 3.5@@px; margin-top: @@256 - player.z - 3.5@@px">
             </div>
         </div>
     </div>
@@ -24,7 +24,10 @@
                 <div class="username">@@player.username@@</div>
                 <div class="time">@@player.elapsed_formatted@@</div>
             </div>
-            <div class="loading-bar" style="width: @@player.width@@px"></div>
+	    <div class="loading-container">
+		    <div class="loading-bar" style="width: @@player.width@@px"></div>
+		    <div class="loading-bar rest"></div>
+	    </div>
         </div>
     </div>
     <b class="header" ng-if="offline_players && offline_players.length > 0">@@numofflineplayers@@ away</b>
