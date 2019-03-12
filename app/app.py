@@ -46,7 +46,8 @@ def insert_player_no_commit(name, pos, in_sim):
         # Entered the sim
         player.enter_sim()
     db.session.add(player)
-    
+
+
 # Reset the state of all players currently in the sim and accumulate time (sim crash, script reset)
 @app.route('/sim/reset/<token>')
 def reset(token):
@@ -60,67 +61,65 @@ def reset(token):
     db.session.add_all(players)
     db.session.commit()
     return '200'
-    
+
+
 @app.route('/sim/json/<name>')
 def json(name):
     player = models.Player.query.filter_by(username=name).first()
     if player:
         return jsonify(player.serialize)        
     return 'Could not find player'
-    
+
+
 @app.route('/sim/json/players')
 def json_in_sim():
     players = models.Player.query.all()
     if players:
         online_players = [player for player in players if player.in_sim]
         return jsonify(\
-            players= [player.serialize for player in online_players], \
-            offline_players=[player.serialize for player in players if not player.in_sim], \
-            max_time=max([player.serialize['elapsed'] for player in online_players]), \
-            id=md5(reduce((lambda x, y : x+y), [str(player) for player in online_players]).encode()).hexdigest() # Provide an id associated with the returned array for diff checking
-        )
+            players= [player.serialize for player in online_players],
+            offline_players=[player.serialize for player in players if not player.in_sim],
+            max_time=max([player.serialize['elapsed'] for player in online_players]),
+            id=md5(reduce((lambda x, y : x+y), [str(player) for player in online_players]).encode()).hexdigest()
+        ) # Provide an id associated with the returned array for diff checking
     return jsonify(players=[], id="%032x" % getrandbits(128))
 
-# using our dump endpoint
-# we want to detect if a player has left or entered the sim
-# using the old array and the new array
-# and vice versa
+
+def parse_dump():
+    players = [player_string.split(",") for player_string in request.form['players'].split(':')]
+    positions = {}
+    for name, x, y in players:
+        positions[name] = (x, y)
+    return set([name for name, x, y in players if name != ""]), positions
+
+
 @app.route('/sim/dump/<token>', methods=['POST'])
 def dump(token):
     if token != app.config['SECRET_KEY']:
         return 'Bad secret'
 
-    players = []
-    for player_string in request.form['players'].split(':'):
-        players.append(player_string.split(","))
-    player_names = set(filter(lambda x: x != "", [player[0] for player in players]))
+    player_names, positions = parse_dump()
     current_players = set([player.username for player in models.Player.query.filter_by(in_sim=True).all()])
-
-    positions = {}
-
-    for player in players:
-        positions[player[0]] = (player[1], player[2])
-
     joined = player_names - current_players
+    left = current_players - player_names
 
     # Player already in sim, needs their position updated
-    for player in players:
-        if player[0] not in joined:
-            update_player(player[0], positions[player[0]])
+    for username in player_names:
+        if username not in joined:
+            update_player(username, positions[username])
 
     for player in joined:
         # player has "joined" the sim
         insert_player_no_commit(player, positions[player], True)
 
-    for player in current_players - player_names:
+    for player in left:
         # player has "left" the sim
         insert_player_no_commit(player, (-1, -1), False)
 
-    # register the number of players in the sim at the current time
-    
     db.session.commit()
     return json_in_sim()
-    
+
+
 @app.errorhandler(404)
 def page_not_found_error(error):
     return '404'
