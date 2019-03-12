@@ -76,7 +76,7 @@ def json_in_sim():
     players = models.Player.query.all()
     if players:
         online_players = [player for player in players if player.in_sim]
-        return jsonify(\
+        return jsonify(
             players= [player.serialize for player in online_players],
             offline_players=[player.serialize for player in players if not player.in_sim],
             max_time=max([player.serialize['elapsed'] for player in online_players]),
@@ -118,8 +118,7 @@ def dump(token):
 
     db.session.commit()
     return json_in_sim()
-
-
+    
 @app.errorhandler(404)
 def page_not_found_error(error):
     return '404'

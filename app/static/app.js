@@ -55,7 +55,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
                   }
 
                   for (var i = 0; i < res.data.players.length; i++) {
-                      res.data.players[i].width = Math.min(10 + (210 * res.data.players[i].elapsed/res.data.max_time), 220);
+                      res.data.players[i].width = 100 * res.data.players[i].elapsed/res.data.max_time;
                       res.data.players[i].elapsed_formatted = format_time(res.data.players[i].elapsed);
                       var split_name = res.data.players[i].username.split(" ");
                       res.data.players[i].rank = rank_dict[res.data.players[i].username];
@@ -94,7 +94,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
         $scope.max_time = Math.floor($scope.max_time);
         for (var i = 0; i < players.length; i++) {
             players[i].elapsed += elapsed;
-            players[i].width = Math.min(10 + (210 * players[i].elapsed/$scope.max_time), 220);
+            players[i].width = 100 * players[i].elapsed/$scope.max_time;
             players[i].elapsed_formatted = format_time(players[i].elapsed);
         }
 
