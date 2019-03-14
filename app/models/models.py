@@ -14,6 +14,7 @@ class Player(db.Model):
     in_sim = db.Column(db.Boolean, default=False)
     x = db.Column(db.Float, default=-1)
     z = db.Column(db.Float, default=-1)
+    balance = db.Column(db.Float, default=0)
 
     def __str__(self):
         return '%s,%s,%s' % (self.username, self.x, self.z)
@@ -37,7 +38,16 @@ class Player(db.Model):
         return (datetime.datetime.utcnow() - ref).seconds
 
     def accumulate_time(self):
-        self.accumulated_time += (self.left_at - self.entered_at).seconds
+        delta = (self.left_at - self.entered_at).seconds
+        if delta > 0:
+            self.accumulated_time += delta
+            self.increase_balance(delta / 3600.0) # 1 per hour
+
+    def increase_balance(self, delta):
+        self.balance += abs(delta)
+
+    def decrease_balance(self, delta):
+        self.balance = max(0, self.balance - abs(delta))
 
     @property
     def serialize(self):

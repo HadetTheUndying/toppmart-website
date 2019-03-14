@@ -56,8 +56,9 @@ def reset(token):
 
     players = models.Player.query.all()
     for player in players:
-        player.in_sim = False
-    player.accumulate_time()
+        if player.in_sim:
+            player.accumulate_time()
+            player.leave_sim()
     db.session.add_all(players)
     db.session.commit()
     return '200'
@@ -69,6 +70,63 @@ def json(name):
     if player:
         return jsonify(player.serialize)        
     return 'Could not find player'
+
+
+@app.route('/sim/balance/<token>/<name>')
+def balance(token, name):
+    if token != app.config['SECRET_KEY']:
+        return 'Bad secret'
+
+    player = models.Player.query.filter_by(username=name).first()
+    if player:
+        return str(player.balance)
+
+    return "Could not find %s" % name
+
+
+@app.route('/sim/balance/spend/<token>/<name>/<amt>')
+def spend(token, name, amt):
+    if token != app.config['SECRET_KEY']:
+        return 'Bad secret'
+
+    player = models.Player.query.filter_by(username=name)
+
+    if player:
+        player.decrease_balance(float(amt))
+        db.session.commit()
+        return player.balance
+
+    return '%s does not exist.' % name
+
+
+@app.route('/sim/balance/transfer/<token>/<src>/<dst>/<amt>')
+def transfer(token, src, dst, amt):
+    if token != app.config['SECRET_KEY']:
+        return 'Bad secret'
+
+    src_player = models.Player.query.filter_by(username=src).first()
+    dst_player = models.Player.query.filter_by(username=dst).first()
+
+    if not src_player:
+        return 'Source %s does not exist.' % src
+
+    if not dst_player:
+        return 'Destination %s does not exist.' % dst
+
+    amt = float(amt)
+
+    if src_player and dst_player and src_player.balance >= amt and amt > 0:
+        src_player.decrease_balance(amt)
+        dst_player.increase_balance(amt)
+        db.session.commit()
+        return 'Transfer to %s of %s succesful.' % (dst, amt)
+
+    return 'Insufficient funds.'
+
+@app.route('/sim/top_balances')
+def top_balances():
+    richest = models.Player.query.order_by(models.Player.balance.desc())[:5]
+    return str("\n".join(["%s. %s - %s ToppCoins" % (index + 1, player.username, int(player.balance)) for index, player in enumerate(richest)]))
 
 
 @app.route('/sim/json/players')
@@ -118,7 +176,8 @@ def dump(token):
 
     db.session.commit()
     return json_in_sim()
-    
+
+
 @app.errorhandler(404)
 def page_not_found_error(error):
     return '404'
