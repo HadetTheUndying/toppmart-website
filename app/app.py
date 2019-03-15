@@ -89,14 +89,18 @@ def spend(token, name, amt):
     if token != app.config['SECRET_KEY']:
         return 'Bad secret'
 
-    player = models.Player.query.filter_by(username=name)
+    player = models.Player.query.filter_by(username=name).first()
+    amt = float(amt)
 
-    if player:
-        player.decrease_balance(float(amt))
+    if player and player.balance >= amt and amt > 0.0:
+        player.decrease_balance(amt)
         db.session.commit()
-        return player.balance
+        return "Spend successful."
 
-    return '%s does not exist.' % name
+    if not player:
+        return '%s does not exist.' % name
+
+    return "Insufficient funds."
 
 
 @app.route('/sim/balance/transfer/<token>/<src>/<dst>/<amt>')
