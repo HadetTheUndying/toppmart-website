@@ -35,10 +35,10 @@ class Player(db.Model):
         ref = self.left_at
         if self.in_sim:
             ref = self.entered_at
-        return (datetime.datetime.utcnow() - ref).seconds
+        return (datetime.datetime.utcnow() - ref).total_seconds()
 
     def accumulate_time(self):
-        delta = (self.left_at - self.entered_at).seconds
+        delta = (self.left_at - self.entered_at).total_seconds()
         if delta > 0:
             self.accumulated_time += delta
             self.increase_balance(delta / 3600.0) # 1 per hour
