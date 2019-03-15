@@ -92,7 +92,7 @@ def spend(token, name, amt):
     player = models.Player.query.filter_by(username=name).first()
     amt = float(amt)
 
-    if player and player.balance >= amt and amt > 0.0:
+    if player and player.balance >= amt > 0:
         player.decrease_balance(amt)
         db.session.commit()
         return "Spend successful."
@@ -119,11 +119,11 @@ def transfer(token, src, dst, amt):
 
     amt = float(amt)
 
-    if src_player and dst_player and src_player.balance >= amt and amt > 0:
+    if src_player.balance >= amt > 0:
         src_player.decrease_balance(amt)
         dst_player.increase_balance(amt)
         db.session.commit()
-        return 'Transfer to %s of %s succesful.' % (dst, amt)
+        return 'Transfer to %s of %s successful.' % (dst, amt)
 
     return 'Insufficient funds.'
 
