@@ -128,8 +128,9 @@ def transfer(token, src, dst, amt):
     if token != app.config['SECRET_KEY']:
         return 'Bad secret'
 
+    from sqlalchemy import func
     src_player = models.Player.query.filter_by(username=src).first()
-    dst_player = models.Player.query.filter_by(username=dst).first()
+    dst_player = models.Player.query.filter(func.lower(models.Player.username) == func.lower(dst)).first()
 
     if not src_player:
         return 'Source %s does not exist.' % src
