@@ -81,7 +81,7 @@ def balance(token, name):
     if player:
         return str(player.balance)
 
-    return "Could not find %s" % name
+    return 'Could not find %s' % name
 
 
 @app.route('/sim/balance/spend/<token>/<name>/<amt>')
@@ -95,12 +95,32 @@ def spend(token, name, amt):
     if player and player.balance >= amt > 0:
         player.decrease_balance(amt)
         db.session.commit()
-        return "Spend successful."
+        return 'Spend successful.'
 
     if not player:
         return '%s does not exist.' % name
 
-    return "Insufficient funds."
+    return 'Insufficient funds.'
+
+
+@app.route('/sim/balance/gain/<token>/<name>/<amt>')
+def gain(token, name, amt):
+    if token != app.config['SECRET_KEY']:
+        return 'Bad secret'
+
+    player = models.Player.query.filter_by(username=name).first()
+
+    if not player:
+        return '%s does not exist.' % name
+
+    amt = float(amt)
+
+    if amt > 0:
+        player.increase_balance(amt)
+        db.session.commit()
+        return 'Gain successful.'
+
+    return 'Something went wrong.'
 
 
 @app.route('/sim/balance/transfer/<token>/<src>/<dst>/<amt>')
@@ -126,6 +146,7 @@ def transfer(token, src, dst, amt):
         return 'Transfer to %s of %s successful.' % (dst, amt)
 
     return 'Insufficient funds.'
+
 
 @app.route('/sim/top_balances')
 def top_balances():
