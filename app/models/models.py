@@ -39,9 +39,9 @@ class Player(db.Model):
 
     def accumulate_time(self):
         delta = (self.left_at - self.entered_at).total_seconds()
+
         if delta > 0:
-            self.accumulated_time += delta
-            self.increase_balance(delta / 3600.0) # 1 per hour
+            self.accumulated_time += delta 
 
     def increase_balance(self, delta):
         self.balance += abs(delta)

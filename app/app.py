@@ -7,12 +7,14 @@ from hashlib import md5
 
 from random import getrandbits
 
+import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 app.config['SECRET_KEY'] = 'CHANGE ME'
+app.config['UPDATE_RATE'] = 5.0 # Every 5 seconds update endpoint called
 
 db = models.db
 db.init_app(app)
@@ -26,6 +28,9 @@ def index():
 def update_player(name, pos):
     player = models.Player.query.filter_by(username=name).first()
     if player is not None:
+        weekday = datetime.datetime.today().weekday()
+        multiplier = 2.0 if weekday == 5 or weekday == 6 else 1.0
+        player.increase_balance(multiplier * app.config['UPDATE_RATE'] / 3600.0)
         player.set_pos(pos)
 
 
@@ -189,8 +194,7 @@ def dump(token):
 
     # Player already in sim, needs their position updated
     for username in player_names:
-        if username not in joined:
-            update_player(username, positions[username])
+        update_player(username, positions[username])
 
     for player in joined:
         # player has "joined" the sim
