@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 
-from models import models
+import app.models as models
 
 from functools import reduce
 from hashlib import md5
@@ -84,7 +84,7 @@ def balance(token, name):
 
     player = models.Player.query.filter_by(username=name).first()
     if player:
-        return str(player.balance)
+        return '{:.2f}'.format(player.balance)
 
     return 'Could not find %s' % name
 

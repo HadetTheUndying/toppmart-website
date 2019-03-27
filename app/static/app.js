@@ -1,4 +1,5 @@
-var app = angular.module('toppmart', []);
+var app = angular.module('toppmart', ['infinite-scroll']);
+angular.module('infinite-scroll').value('THROTTLE_MILLISECONDS', 1000);
 
 // replace curly braces with @@ (collides w/ rendering engine)
 app.config(function($interpolateProvider) {
@@ -26,8 +27,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
     last_date = Date.now(),
     sidebar_id, // last id of request
     loadPromise; // Pointer to the promise created by the Angular $timeout service
-    
-    
+
     format_time = function(total_seconds) {
         total_seconds = Math.floor(total_seconds);
         var hours = (total_seconds / 3600) | 0;
@@ -42,7 +42,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
         .then(function(res) {
           if (sidebar_id == null || sidebar_id != res.data.id) {
               if (res.data.players.length == 0) {
-                   $scope.numplayers = '0 players';
+                   $scope.numPlayers = '0 players';
                    $scope.players = [];
               } else {
                   // Compute the ranks
@@ -63,6 +63,7 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
                           res.data.players[i].username = split_name[0];
                       }
                   }
+
                   for (var i = 0; i < res.data.offline_players.length; i++) {
                       res.data.offline_players[i].elapsed_formatted = format_time(res.data.offline_players[i].elapsed);
                       var split_name = res.data.offline_players[i].username.split(" ");
@@ -71,10 +72,12 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
                           res.data.offline_players[i].username = split_name[0];
                       }
                   }
-                  $scope.numplayers = res.data.players.length + ' player' + (res.data.players.length > 1 ? 's' : '');
+
+                  $scope.numPlayers = res.data.players.length + ' player' + (res.data.players.length > 1 ? 's' : '');
                   $scope.players = res.data.players.sort((b,a) => b.elapsed - a.elapsed);
-                  $scope.offline_players = res.data.offline_players.sort((b,a) => b.elapsed - a.elapsed);
-                  $scope.numofflineplayers = res.data.offline_players.length + ' player' + (res.data.offline_players.length > 1 ? 's' : '');
+                  $scope.offlinePlayers = res.data.offline_players.sort((b,a) => b.elapsed - a.elapsed);
+                  $scope.offline = $scope.offlinePlayers.slice(0, $scope.numLoaded);
+                  $scope.numOfflinePlayers = res.data.offline_players.length + ' player' + (res.data.offline_players.length > 1 ? 's' : '');
                   $scope.max_time = res.data.max_time;
                   sidebar_id = res.data.id;
               }
@@ -86,23 +89,24 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
           nextLoad(++errorCount * 2 * loadTime);
         });
     };
-    
+
     var updateUI = function() {
         players = $scope.players;
         elapsed = (Date.now() - last_date)/1000;
         $scope.max_time += elapsed;
         $scope.max_time = Math.floor($scope.max_time);
+
         for (var i = 0; i < players.length; i++) {
             players[i].elapsed += elapsed;
             players[i].width = 100 * players[i].elapsed/$scope.max_time;
             players[i].elapsed_formatted = format_time(players[i].elapsed);
         }
 
-        offline_players = $scope.offline_players;
+        offlinePlayers = $scope.offlinePlayers;
 
-        for (var i = 0; i < offline_players.length; i++) {
-            offline_players[i].elapsed += elapsed;
-            offline_players[i].elapsed_formatted = format_time(offline_players[i].elapsed);
+        for (var i = 0; i < offlinePlayers.length; i++) {
+            offlinePlayers[i].elapsed += elapsed;
+            offlinePlayers[i].elapsed_formatted = format_time(offlinePlayers[i].elapsed);
         }
 
         last_date = Date.now();
@@ -121,10 +125,20 @@ app.controller('MainCtrl', function($scope, $http, $timeout) {
     };
 
     getPlayers();
-    $scope.numplayers = '0 players';
+    $scope.numPlayers = '0 players';
     $scope.players = [];
-    $scope.numofflineplayers = '0 away';
-    $scope.offline_players = [];
+    $scope.offline = [];
+    $scope.numOfflinePlayers = '0 away';
+    $scope.offlinePlayers = [];
+    $scope.numLoaded = 9;
+
+    $scope.loadMore = function() {
+        if ($scope.numLoaded < $scope.offlinePlayers.length) {
+            $scope.numLoaded = $scope.numLoaded + 120;
+            $scope.offline = $scope.offlinePlayers.slice(0, $scope.numLoaded);
+        }
+    }
+
     updateUI();
     
     $scope.$on('$destroy', function() {
