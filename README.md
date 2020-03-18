@@ -29,6 +29,9 @@ Then navigate to `localhost` in your browser.
 
 To enable `port 80`, do it manually by running `gunicorn -b 0.0.0.0:80 app:app --daemon` (`llHttpRequest` needs this because `https://` redirects invalidate all `POST` requests).
 
+# Renewing SSL certificates
+
+If you're using [certbot](https://certbot.eff.org/) run `certbot certonly -d <domain>` to generate new certificate files.
 
 # How it works
 
